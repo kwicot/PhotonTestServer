@@ -18,6 +18,8 @@ namespace DefaultNamespace
         [SerializeField] private TMP_Text _timerText;
         [SerializeField] private TMP_Text _phaseText;
         [SerializeField] private TMP_Text _speedText;
+        [SerializeField] private TMP_Text _firstPlayerNickName;
+        [SerializeField] private TMP_Text _secondPlayerNickName;
         public void AddSpeed(int speed)
         {
             int actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
@@ -29,6 +31,10 @@ namespace DefaultNamespace
             var curSpeed = Convert.ToInt32(_speedText.text);
             _speedText.text = $"{curSpeed+speed}";
             PhotonNetwork.RaiseEvent(code, (object)dict, RaiseEventOptions.Default, SendOptions.SendReliable);
+
+            var players = PhotonNetwork.CurrentRoom.Players;
+            _firstPlayerNickName.text = $"Player 1- {players[0].NickName}";
+            _secondPlayerNickName.text = $"Player 2- {players[1].NickName}";
         }
 
         public void OnEvent(EventData photonEvent)

@@ -5,6 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class PhotonTest : MonoBehaviourPunCallbacks, IOnEventCallback
@@ -86,6 +87,19 @@ public class PhotonTest : MonoBehaviourPunCallbacks, IOnEventCallback
         if(PhotonNetwork.CurrentRoom.PlayerCount == 2 && PhotonNetwork.IsMasterClient)
             PhotonNetwork.LoadLevel("Game");
         playersText.text = $"{PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers}";
+
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        base.OnPlayerLeftRoom(otherPlayer);
+        SceneManager.LoadScene("Nickname");
+    }
+
+    public override void OnLeftRoom()
+    {
+        base.OnLeftRoom();
+        SceneManager.LoadScene("Nickname");
 
     }
 
