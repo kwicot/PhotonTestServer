@@ -33,6 +33,7 @@ public class PhotonTest : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         base.OnDisconnected(cause);
         Debug.LogError($"Disconnected via: {cause}");
+        SceneManager.LoadScene("Nickname");
     }
 
     public override void OnConnected()
@@ -83,6 +84,12 @@ public class PhotonTest : MonoBehaviourPunCallbacks, IOnEventCallback
         playersText.text = $"{PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers}";
     }
 
+    private void OnApplicationQuit()
+    {
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.Disconnect();
+    }
+
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         if(PhotonNetwork.CurrentRoom.PlayerCount == 2 && PhotonNetwork.IsMasterClient)
@@ -95,13 +102,12 @@ public class PhotonTest : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         base.OnPlayerLeftRoom(otherPlayer);
         PhotonNetwork.LeaveRoom();
-        SceneManager.LoadScene("Nickname");
+        PhotonNetwork.Disconnect();
     }
 
     public override void OnLeftRoom()
     {
         base.OnLeftRoom();
-        SceneManager.LoadScene("Nickname");
     }
 
     public void OnEvent(EventData photonEvent)

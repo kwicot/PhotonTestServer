@@ -345,6 +345,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 910f861a9f9443cda76b2cc3c8ec3eae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _loadedPlayersCounter: {fileID: 2066925436}
   _addSpeedButton: {fileID: 1982194697}
   _timerText: {fileID: 29289080}
   _phaseText: {fileID: 549821706}

@@ -14,18 +14,33 @@ namespace DefaultNamespace
     
     public class PlayerInputController : MonoBehaviourPunCallbacks, IOnEventCallback
     {
+        [SerializeField]private LoadedPlayersCounter _loadedPlayersCounter;
         [SerializeField] private Button _addSpeedButton;
         [SerializeField] private TMP_Text _timerText;
         [SerializeField] private TMP_Text _phaseText;
         [SerializeField] private TMP_Text _speedText;
         [SerializeField] private TMP_Text _firstPlayerNickName;
         [SerializeField] private TMP_Text _secondPlayerNickName;
+        private TMP_Text[] playersText;
 
         private void Start()
         {
+            if (_loadedPlayersCounter.AllLoaded)
+            {
+                Initialize();
+            }
+            else
+            {
+                _loadedPlayersCounter.OnAllLoaded += Initialize;
+            }
+        }
+
+        private void Initialize()
+        {
             var players = PhotonNetwork.CurrentRoom.Players;
-            _firstPlayerNickName.text = $"Player 1- {players[0].NickName}";
-            _secondPlayerNickName.text = $"Player 2- {players[1].NickName}";
+            Debug.Log($"Players count {players.Count}");
+            _firstPlayerNickName.text = $"Player 1- {players[1].NickName}";
+            _secondPlayerNickName.text = $"Player 2- {players[2].NickName}";
         }
 
         public void AddSpeed(int speed)
