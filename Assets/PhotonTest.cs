@@ -10,10 +10,17 @@ using Random = UnityEngine.Random;
 
 public class PhotonTest : MonoBehaviourPunCallbacks, IOnEventCallback
 {
+    private static PhotonTest instance;
     [SerializeField] private TMP_Text playersText;
     void Start()
     {
-        PhotonNetwork.NickName = $"Player_{Random.Range(0, 999)}";
+        if (instance && instance != this)
+        {
+            Destroy(instance.gameObject);
+        }
+        instance = this;
+        
+        PhotonNetwork.NickName = PlayerPrefs.GetString("Nickname",  $"Player_{Random.Range(0, 999)}");
         PhotonNetwork.AutomaticallySyncScene = true;
 
         PhotonNetwork.ConnectUsingSettings();
@@ -73,12 +80,6 @@ public class PhotonTest : MonoBehaviourPunCallbacks, IOnEventCallback
         base.OnJoinedRoom();
 
         Debug.LogWarning($"Joined to room {PhotonNetwork.CurrentRoom.Name}");
-
-        var testEvent = new ClientTestEvent()
-        {
-            EventName = "TestEventHandler",
-            EventText = $"This is a test event from client with id {PhotonNetwork.LocalPlayer.UserId}"
-        };
         playersText.text = $"{PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers}";
     }
 
@@ -93,6 +94,7 @@ public class PhotonTest : MonoBehaviourPunCallbacks, IOnEventCallback
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
+        PhotonNetwork.LeaveRoom();
         SceneManager.LoadScene("Nickname");
     }
 
@@ -100,7 +102,6 @@ public class PhotonTest : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         base.OnLeftRoom();
         SceneManager.LoadScene("Nickname");
-
     }
 
     public void OnEvent(EventData photonEvent)
